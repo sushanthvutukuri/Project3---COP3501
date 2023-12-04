@@ -93,7 +93,7 @@ def selection_sort(arr):
         # Swap the found minimum element with the first element
         arr[i], arr[min_index] = arr[min_index], arr[i]
 
-def processData(airports: list):
+def processData(airports: list, displayGraph: bool):
     totalDelays = []  # Initialize an empty list
     airportsSet = set()
 
@@ -134,40 +134,42 @@ def processData(airports: list):
     #for i in range(len(averageDelayTime)):
         #print(f"{airportList[i]} {averageDelayTime[i]}")
 
-    # plot the averages of airport delays
-    fig, ax = plt.subplots(figsize = (13,2.7), layout = 'constrained')
-    ax.bar(airportList, averageDelayTime)
-    plt.show()
-
-
-    # Use Selection Sort to sort the airports based on the total number of delays
-    start_time = time.time()
-    selection_sort(totalDelays)
-    end_time = time.time()
-
-    # Additional performance analysis of Selection Sort
-    print("Performance Analysis:")
-    print(f"Selection Sort Time: {end_time - start_time} seconds")
-
-    # Use Insertion Sort
-    totalDelaysCopy = totalDelays.copy()
-    start_time = time.time()
-    insertion_sort(totalDelaysCopy)
-    end_time = time.time()
-    print(f"Insertion Sort Time: {end_time - start_time} seconds")
-
-    # Use built-in sort (for comparison)
-    start_time = time.time()
-    totalDelaysCopy = totalDelays.copy()
-    totalDelaysCopy.sort()
-    end_time = time.time()
-    print(f"Built-in Sort Time: {end_time - start_time} seconds")
+    if(displayGraph):
+        # plot the averages of airport delays
+        fig, ax = plt.subplots(figsize = (13,2.7), layout = 'constrained')
+        ax.bar(airportList, averageDelayTime)
+        plt.show()
 
     # print the list of delays from least to most delays
-    #for entries in totalDelays:
-        #print(entries)
+    if(displayGraph == False):
+        for entries in totalDelays:
+            print(entries)
+
+        # Use Selection Sort to sort the airports based on the total number of delays
+        start_time = time.time()
+        selection_sort(totalDelays)
+        end_time = time.time()
+
+        # Additional performance analysis of Selection Sort
+        print("Performance Analysis:")
+        print(f"Selection Sort Time: {end_time - start_time} seconds")
+
+        # Use Insertion Sort
+        totalDelaysCopy = totalDelays.copy()
+        start_time = time.time()
+        insertion_sort(totalDelaysCopy)
+        end_time = time.time()
+        print(f"Insertion Sort Time: {end_time - start_time} seconds")
+
+        # Use built-in sort (for comparison)
+        start_time = time.time()
+        totalDelaysCopy = totalDelays.copy()
+        totalDelaysCopy.sort()
+        end_time = time.time()
+        print(f"Built-in Sort Time: {end_time - start_time} seconds")
 
 if __name__ == '__main__':
+    airports = airlines.get_airports()
     #main UI using input output system
     data= Data()
     print("This is a Flight Data Compiler that retrieves and stores data using a sorting algorithm based on delayed and missed flights.")
@@ -177,7 +179,8 @@ if __name__ == '__main__':
         #displays the commands available
         print("Press 1 to generate a graph and data based on an airport code or name")
         print("Press 2 to generate a graph of all airports flight delays averaged over multiple months")
-        print("Press 3 to exit")
+        print("Press 3 to print the sorted list of delays from least to most delays and, \n display the algorithims performance analysis")
+        print("Press 4 to exit")
         print()
         print("Type in command and hit enter:")
         num=input()
@@ -192,9 +195,10 @@ if __name__ == '__main__':
             print("The graph displays the average delays at an airport by taking into account the delays over multiple months")
             print()
             print("Once you are finished with the graph, please close to continue using the Compiler")
-            airports = airlines.get_airports()
-            processData(airports) 
-        elif num=="3":
+            processData(airports, True)
+        elif num == "3":
+            processData(airports, False)
+        elif num=="4":
             #command for exit program
             print("Thank you for using this program!")
             cont=False
