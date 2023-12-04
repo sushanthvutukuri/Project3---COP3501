@@ -72,6 +72,7 @@ def processData(airports: list):
     for i in range(len(averageDelayTime)):
         print(f"{airportList[i]} {averageDelayTime[i]}")
 
+    # plot the averages of airport delays
     fig, ax = plt.subplots(figsize = (13,2.7), layout = 'constrained')
     ax.bar(airportList, averageDelayTime)
     plt.show()
