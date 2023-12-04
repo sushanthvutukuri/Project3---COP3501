@@ -86,7 +86,7 @@ def selection_sort(arr):
         # Swap the found minimum element with the first element
         arr[i], arr[min_index] = arr[min_index], arr[i]
 
-def processData(airports: list):
+def processData(airports: list, printSortedDelays: bool):
     totalDelays = []  # Initialize an empty list
     airportsSet = set()
 
@@ -128,9 +128,10 @@ def processData(airports: list):
         #print(f"{airportList[i]} {averageDelayTime[i]}")
 
     # plot the averages of airport delays
-    fig, ax = plt.subplots(figsize = (13,2.7), layout = 'constrained')
-    ax.bar(airportList, averageDelayTime)
-    plt.show()
+    if(printSortedDelays == False):
+        fig, ax = plt.subplots(figsize = (13,2.7), layout = 'constrained')
+        ax.bar(airportList, averageDelayTime)
+        plt.show()
 
 
     # Use Selection Sort to sort the airports based on the total number of delays
@@ -157,8 +158,9 @@ def processData(airports: list):
     print(f"Built-in Sort Time: {end_time - start_time} seconds")
 
     # print the list of delays from least to most delays
-    #for entries in totalDelays:
-        #print(entries)
+    if(printSortedDelays):
+        for entries in totalDelays:
+            print(entries)
 
 if __name__ == '__main__':
     data= Data()
@@ -168,7 +170,8 @@ if __name__ == '__main__':
     while cont:
         print("Press 1 to generate a graph and data based on an airport code or name")
         print("Press 2 to generate a list of all airports sorted in ascending order based on the number of flights delayed")
-        print("Press 3 to exit")
+        print("Press 3 to print sorted list of delays from least to most delays ")
+        print("Press 4 to exit")
         print()
         print("Type in command and hit enter:")
         num=input()
@@ -183,8 +186,11 @@ if __name__ == '__main__':
             print()
             print("Once you are finished with the graph, please close to continue using the Compiler")
             airports = airlines.get_airports()
-            processData(airports) 
-        elif num=="3":
+            processData(airports, False)
+        elif num == "3":
+            airports = airlines.get_airports()
+            processData(airports, True)
+        elif num=="4":
             print("Thank you for using this program!")
             cont=False
         else:
