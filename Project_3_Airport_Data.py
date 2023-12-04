@@ -15,7 +15,7 @@ class Data:
         for index in airports:
             if self.airlist.count(index["Airport"]) == 0:
                 self.airlist.append(index["Airport"])
-    #Method that returns data in grpah format
+    #Method that returns data in graph format
     @staticmethod
     def printData(code, self):
         airdata = []
@@ -23,27 +23,34 @@ class Data:
         counter=0
         airport_name="";
         print("Following is a graph and text representation of the data requested.")
+        #loop for finding the specific airport or code to see if it exists
         for index in self.airlist:
             if index["Code"] == code or index["Name"] == code:
                 print(index["Name"])
                 airport_name=index["Name"]
                 break
+
+        #if the specific airport does exist, add all the statistics related to that airport into sets
         for index in self.airports:
             if(index["Airport"]["Code"]==code):
                 print(index["Time"])
                 print(index["Statistics"]["Flights"])
                 airdata.append(index["Statistics"]["Flights"]["Total"]-index["Statistics"]["Flights"]["On Time"])
                 airtime.append(index["Time"]["Label"])
+        #if the length of the sets containng the data is 0, then the airport does not exist so return and display that it was an invalid code
         if(len(airdata)==0):
             print("Invalid code or name. Please make sure that your spelling is correct. Codes are case sensitive and must be capitalized. Names must be specific.")
             print()
             return
+
+        #create a plot of the data at one ariport over a specific period of time
         fig, ax=plt.subplots(figsize=(20, 4), layout='constrained')
         string="Date (From "+(airtime[0])+" to "+(airtime[-1])+")"
         ax.plot(airtime, airdata)
         ax.set_xlabel(string)
         ax.set_ylabel("Number of Delays")
         ax.set_title("Trend for Delays at " + airport_name)
+        #display information about the plot
         print()
         print("NOTE: Unfortunately, due to large data sets, the X-Axis is may be unreadable. To counteract this issue, please use the zoom in feature on the graph ")
         print()
@@ -86,7 +93,7 @@ def selection_sort(arr):
         # Swap the found minimum element with the first element
         arr[i], arr[min_index] = arr[min_index], arr[i]
 
-def processData(airports: list, printSortedDelays: bool):
+def processData(airports: list):
     totalDelays = []  # Initialize an empty list
     airportsSet = set()
 
@@ -128,10 +135,9 @@ def processData(airports: list, printSortedDelays: bool):
         #print(f"{airportList[i]} {averageDelayTime[i]}")
 
     # plot the averages of airport delays
-    if(printSortedDelays == False):
-        fig, ax = plt.subplots(figsize = (13,2.7), layout = 'constrained')
-        ax.bar(airportList, averageDelayTime)
-        plt.show()
+    fig, ax = plt.subplots(figsize = (13,2.7), layout = 'constrained')
+    ax.bar(airportList, averageDelayTime)
+    plt.show()
 
 
     # Use Selection Sort to sort the airports based on the total number of delays
@@ -158,42 +164,42 @@ def processData(airports: list, printSortedDelays: bool):
     print(f"Built-in Sort Time: {end_time - start_time} seconds")
 
     # print the list of delays from least to most delays
-    if(printSortedDelays):
-        for entries in totalDelays:
-            print(entries)
+    #for entries in totalDelays:
+        #print(entries)
 
 if __name__ == '__main__':
+    #main UI using input output system
     data= Data()
     print("This is a Flight Data Compiler that retrieves and stores data using a sorting algorithm based on delayed and missed flights.")
     print("These are the following commands:")
     cont=True
     while cont:
+        #displays the commands available
         print("Press 1 to generate a graph and data based on an airport code or name")
-        print("Press 2 to generate a list of all airports sorted in ascending order based on the number of flights delayed")
-        print("Press 3 to print sorted list of delays from least to most delays ")
-        print("Press 4 to exit")
+        print("Press 2 to generate a graph of all airports flight delays averaged over multiple months")
+        print("Press 3 to exit")
         print()
         print("Type in command and hit enter:")
         num=input()
         print()
         if num=="1":
+            #displays statistics of flight delays at one airport
             print("Enter the airport code or name: ")
             code = input()
             data.printData(code, data)
-            #data.getData(code, data)
         elif num=="2":
+            #displays statistics of flight delays at all airports in the dataset averaged over multiple months
             print("The graph displays the average delays at an airport by taking into account the delays over multiple months")
             print()
             print("Once you are finished with the graph, please close to continue using the Compiler")
             airports = airlines.get_airports()
-            processData(airports, False)
-        elif num == "3":
-            airports = airlines.get_airports()
-            processData(airports, True)
-        elif num=="4":
+            processData(airports) 
+        elif num=="3":
+            #command for exit program
             print("Thank you for using this program!")
             cont=False
         else:
+            #if command is invalid displays this error
             print("Invalid command, please try again")
             print()
 
