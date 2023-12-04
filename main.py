@@ -1,4 +1,7 @@
 import time
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib as mpl
 import airlines
 
 def insertion_sort(arr):
@@ -30,6 +33,8 @@ def selection_sort(arr):
 
 def processData(airports: list):
     totalDelays = []  # Initialize an empty list
+    airportsSet = set()
+
 
     # ["Statistics"]["Flights"]["# of Delays"]
     # calculate total number of delays which includes: Carrier, Late aircraft,
@@ -38,6 +43,39 @@ def processData(airports: list):
         temp1DelayTime = entry["Statistics"]["Flights"]["Delayed"]
         temp2AirportCode = entry["Airport"]["Code"]
         totalDelays.append((temp1DelayTime, temp2AirportCode))
+
+        # add to the airport set the airport code
+        airportsSet.add(temp2AirportCode)
+
+    # turn set into a list of airports
+    airportList = list(airportsSet)
+    # create array for average delay time  with same amount of entries as airports
+    averageDelayTime = [0] * len(airportList)
+    airportDelays = [[] for _ in range(len(airportList))]
+    for entry in airports:
+        temp1DelayTime = entry["Statistics"]["Flights"]["Delayed"]
+        temp2AirportCode = entry["Airport"]["Code"]
+        # add delay value to the airport
+        index = airportList.index(temp2AirportCode)
+        airportDelays[index].append(temp1DelayTime)
+
+    # calculate average delay time for each airport
+    for i in range(len(airportDelays)):
+        total = 0
+        count = 0
+        for j in range(len(airportDelays[i])):
+            total += airportDelays[i][j]
+            count += 1
+        averageDelayTime[i] = total/count
+
+
+    for i in range(len(averageDelayTime)):
+        print(f"{airportList[i]} {averageDelayTime[i]}")
+
+    fig, ax = plt.subplots(figsize = (13,2.7), layout = 'constrained')
+    ax.bar(airportList, averageDelayTime)
+    plt.show()
+
 
     # Use Selection Sort to sort the airports based on the total number of delays
     start_time = time.time()
