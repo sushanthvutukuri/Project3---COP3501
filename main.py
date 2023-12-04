@@ -66,6 +66,7 @@ def processData(airports: list):
     end_time = time.time()
     print(f"Built-in Sort Time: {end_time - start_time} seconds")
 
+
 if __name__ == '__main__':
     airports = airlines.get_airports()
     processData(airports)
